@@ -2779,24 +2779,11 @@ function getConsentLevel() {
                 // 但屏幕可能转了，需要用 screen.orientation 补偿
                 let g = Math.min(90, Math.max(-90, e.gamma || 0));
                 let b = Math.min(90, Math.max(-90, e.beta || 0));
-                const angle = (screen.orientation?.angle || 0) % 360;
                 const strength = 1;
-                let gx, gy;
-                if (angle === 0) {
-                    gx = (g / 90) * strength;
-                    gy = (b / 90) * strength + 0;
-                } else if (angle === 90) {
-                    // 顺时针横屏：gamma→gy, -beta→gx
-                    gx = (-b / 90) * strength;
-                    gy = (g / 90) * strength + 0;
-                } else if (angle === 180) {
-                    // 倒置：全取反
-                    gx = (-g / 90) * strength;
-                    gy = (-b / 90) * strength + 0;
-                } else { // 270 / -90，逆时针横屏
-                    gx = (b / 90) * strength;
-                    gy = (-g / 90) * strength + 0;
-                }
+                // 平板横屏（自动旋转关闭时 orientation.angle 不可靠）
+                // gamma → 前后倾斜(gy), -beta → 左右倾斜(gx)
+                gx = (-b / 90) * strength;
+                gy = (g / 90) * strength + 0.5;
                 engine.gravity.x = gx;
                 engine.gravity.y = gy;
             }

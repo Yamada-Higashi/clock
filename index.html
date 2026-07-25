@@ -1951,6 +1951,10 @@ function getConsentLevel() {
                 spawnVirus(window.innerWidth / 2 - 100, window.innerHeight / 3, 0);
                 return;
             }
+            if (raw.toLowerCase() === 'gravity') {
+                if (typeof collapse === 'function') collapse();
+                return;
+            }
             debugMode = true;
             unixMode = false;
             const nums = raw.replace(/\D/g, '').padEnd(6, '0').slice(0, 6);
@@ -2766,7 +2770,7 @@ function getConsentLevel() {
             const ww = window.innerWidth;
             const wh = window.innerHeight;
 
-            engine = Matter.Engine.create({ gravity: { x: 0, y: 1 } });
+            engine = Matter.Engine.create({ gravity: { x: 0, y: 0.5 } });
 
             // ── 陀螺仪：设备倾斜 → 重力转向 ──
             function onGyro(e) {
@@ -2776,21 +2780,22 @@ function getConsentLevel() {
                 let g = Math.min(90, Math.max(-90, e.gamma || 0));
                 let b = Math.min(90, Math.max(-90, e.beta || 0));
                 const angle = (screen.orientation?.angle || 0) % 360;
-                const strength = 2;
+                const strength = 1;
                 let gx, gy;
                 if (angle === 0) {
                     gx = (g / 90) * strength;
-                    gy = (-b / 90) * strength + 1;
+                    gy = (b / 90) * strength + 0;
                 } else if (angle === 90) {
-                    // 顺时针横屏：gamma→gy, beta→gx
-                    gx = (b / 90) * strength;
-                    gy = (-g / 90) * strength + 1;
-                } else if (angle === 180) {
-                    gx = (-g / 90) * strength;
-                    gy = (b / 90) * strength + 1;
-                } else { // 270 / -90，逆时针横屏
+                    // 顺时针横屏：gamma→gy, -beta→gx
                     gx = (-b / 90) * strength;
-                    gy = (g / 90) * strength + 1;
+                    gy = (g / 90) * strength + 0;
+                } else if (angle === 180) {
+                    // 倒置：全取反
+                    gx = (-g / 90) * strength;
+                    gy = (-b / 90) * strength + 0;
+                } else { // 270 / -90，逆时针横屏
+                    gx = (b / 90) * strength;
+                    gy = (-g / 90) * strength + 0;
                 }
                 engine.gravity.x = gx;
                 engine.gravity.y = gy;
@@ -2973,6 +2978,7 @@ function getConsentLevel() {
             }
         });
 
+        window.collapse = collapse;
         console.log('🧱 坍缩系统就绪 — G 键重力解放（DOM 物理版）');
     })();
     </script>

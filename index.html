@@ -2781,9 +2781,9 @@ function getConsentLevel() {
                 let b = Math.min(90, Math.max(-90, e.beta || 0));
                 const strength = 1;
                 // 平板横屏（自动旋转关闭时 orientation.angle 不可靠）
-                // gamma → 前后倾斜(gy), -beta → 左右倾斜(gx)
-                gx = (-b / 90) * strength;
-                gy = (g / 90) * strength + 0;
+                // gamma → 左右倾斜(gx), beta → 前后倾斜(gy)
+                gx = (g / 90) * strength;
+                gy = (b / 90) * strength;
                 engine.gravity.x = gx;
                 engine.gravity.y = gy;
             }

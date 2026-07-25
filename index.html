@@ -2770,7 +2770,7 @@ function getConsentLevel() {
             const ww = window.innerWidth;
             const wh = window.innerHeight;
 
-            engine = Matter.Engine.create({ gravity: { x: 0, y: 0.5 } });
+            engine = Matter.Engine.create({ gravity: { x: 0, y: 0 } });
 
             // ── 陀螺仪：设备倾斜 → 重力转向 ──
             function onGyro(e) {
@@ -2783,7 +2783,7 @@ function getConsentLevel() {
                 // 平板横屏（自动旋转关闭时 orientation.angle 不可靠）
                 // gamma → 前后倾斜(gy), -beta → 左右倾斜(gx)
                 gx = (-b / 90) * strength;
-                gy = (g / 90) * strength + 0.5;
+                gy = (g / 90) * strength + 0;
                 engine.gravity.x = gx;
                 engine.gravity.y = gy;
             }

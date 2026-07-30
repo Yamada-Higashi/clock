@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashboard</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📺</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200;400;700&family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
@@ -441,8 +442,50 @@
         .weather-offline {
             color: rgba(255, 255, 255, 0.12);
         }
-
-
+        .weather-loc {
+            font-family: 'Bender', 'JetBrains Mono', 'BIZ UDPGothic', 'Noto Sans SC', monospace;
+            font-size: clamp(9px, 1vw, 12px);
+            color: rgba(255, 255, 255, 0.25);
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            margin-top: 6px;
+            transition: color 0.2s;
+        }
+        .weather-loc:hover {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .weather-multiloc {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 2px;
+        }
+        .weather-ml-item {
+            font-family: 'Bender', 'JetBrains Mono', 'BIZ UDPGothic', 'Noto Sans SC', monospace;
+            font-size: clamp(8px, 0.85vw, 11px);
+            color: rgba(255, 255, 255, 0.2);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            padding: 1px 6px;
+            cursor: pointer;
+            transition: color 0.2s, background 0.2s;
+            user-select: none;
+        }
+        .weather-ml-item:hover {
+            color: rgba(255, 255, 255, 0.5);
+            background: rgba(255,255,255,0.08);
+        }
+        .weather-ml-item.active {
+            color: rgba(255, 255, 255, 0.5);
+            border-color: rgba(255,255,255,0.15);
+        }
+        .weather-ml-del {
+            margin-left: 3px;
+            opacity: 0.3;
+        }
+        .weather-ml-del:hover {
+            opacity: 0.8;
+        }
 
         /* ── 周历 ── */
         .weekcal {
@@ -476,6 +519,9 @@
             color: rgba(255, 255, 255, 0.25);
             margin-bottom: 2px;
         }
+        .day-name-moon {
+            cursor: pointer;
+        }
         .weekcal-day.today {
             color: #fff;
             text-shadow: 0 0 8px rgba(0, 180, 255, 0.3);
@@ -489,6 +535,51 @@
             margin-top: 6px;
             width: 100%;
         }
+        .zhetsu-info {
+            position: fixed;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            font-family: 'Bender', 'JetBrains Mono', monospace;
+            font-weight: 200;
+            font-size: clamp(16px, 2.5vw, 28px);
+            color: rgba(255, 80, 80, 0.4);
+            letter-spacing: 3px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            text-align: center;
+            transform: translateX(-50%) translateY(-8px);
+        }
+
+        .zhetsu-info.show {
+            opacity: 1;
+            padding: 2px 0;
+            transform: translateX(-50%) translateY(0);
+        }
+        .zhetsu-info.show.danger {
+            animation: zhetsuPulse 2s ease-in-out infinite;
+        }
+        .zhetsu-sub {
+            display: block;
+            font-family: 'BIZ UDPGothic', 'Noto Sans SC', monospace;
+            font-size: clamp(16px, 2.5vw, 28px);
+            color: rgba(255, 80, 80, 0.3);
+            font-weight: 200;
+            margin-top: 6px;
+            letter-spacing: 2px;
+        }
+        .zhetsu-highlight {
+            display: inline-block;
+            padding: 0px 4px;
+            border: 1px solid rgba(255,80,80,0.35);
+        }
+        @keyframes zhetsuPulse {
+            0%, 100% { text-shadow: 0 0 8px rgba(255, 80, 80, 0.15); }
+            50% { text-shadow: 0 0 20px rgba(255, 80, 80, 0.4), 0 0 50px rgba(255, 80, 80, 0.1); }
+        }
+
         .sunmoon {
             font-family: 'Bender', 'BIZ UDPGothic', monospace;
             font-size: clamp(14px, 2vw, 24px);
@@ -1311,6 +1402,186 @@
             opacity: 1;
         }
 
+        /* ── Sticky Notes (UWP 风格) ── */
+        .sn-add-fab {
+            position: fixed;
+            left: 36px;
+            top: 240px;
+            z-index: 44;
+            padding: 0 14px;
+            height: 38px;
+            border-radius: 0;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.35);
+            font-size: 14px;
+            line-height: 38px;
+            cursor: pointer;
+            user-select: none;
+            font-family: 'BIZ UDPGothic', 'Noto Sans SC', sans-serif;
+            letter-spacing: 3px;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+        .sn-add-fab:hover {
+            background: rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.7);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .sn-note {
+            position: fixed;
+            z-index: 45;
+            border-radius: 0;
+            color: #ccc;
+            font-family: 'Noto Sans SC', 'BIZ UDPGothic', sans-serif;
+            font-size: clamp(13px, 1.4vw, 15px);
+            padding: 12px 16px 6px 16px;
+            box-shadow:
+                0 2px 8px rgba(0,0,0,0.4);
+            cursor: grab;
+            word-break: break-word;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .sn-note:active { cursor: grabbing; }
+
+        .sn-toolbar {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 4px;
+            display: flex;
+            gap: 6px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+        .sn-toolbar.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .sn-toolbar .sn-btn {
+            font-size: 13px;
+            cursor: pointer;
+            color: rgba(255,255,255,0.3);
+            user-select: none;
+            transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+            font-family: 'Bender', 'JetBrains Mono', monospace;
+            font-weight: 400;
+            letter-spacing: 1px;
+            line-height: 20px;
+            padding: 0 8px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.04);
+        }
+        .sn-toolbar .sn-btn:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.15); }
+        .sn-toolbar .sn-btn.on { color: #fff; background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.25); }
+        .sn-toolbar .sn-raw { font-size: 10px; font-weight: 700; letter-spacing: 0; }
+        .sn-toolbar .sn-raw.on { color: #ffd700; background: rgba(255,215,0,0.12); border-color: rgba(255,215,0,0.25); }
+
+        .sn-note .sn-text {
+            flex: 1;
+            outline: none;
+            border: none;
+            background: transparent;
+            color: inherit;
+            font: inherit;
+            line-height: inherit;
+            width: 100%;
+            min-height: 30px;
+            cursor: text;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            user-select: text;
+            -webkit-user-select: text;
+        }
+        .sn-note .sn-text::-webkit-scrollbar { width: 3px; }
+        .sn-note .sn-text::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.08);
+        }
+        .sn-note .sn-text::selection {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+        }
+
+        .sn-note .sn-del {
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            cursor: pointer;
+            opacity: 0;
+            font-size: 16px;
+            color: rgba(255,255,255,0.15);
+            transition: opacity 0.2s ease;
+            user-select: none;
+            line-height: 1;
+        }
+        .sn-note:hover .sn-del { opacity: 0.5; }
+        .sn-note .sn-del:hover { opacity: 1; color: #c00; }
+
+        .sn-colors {
+            position: absolute;
+            top: 8px;
+            right: 28px;
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+        .sn-note:hover .sn-colors { opacity: 1; pointer-events: auto; }
+        .sn-color-dot {
+            width: 10px;
+            height: 10px;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.15s ease, border-color 0.15s ease;
+        }
+        .sn-color-dot:hover {
+            transform: scale(1.3);
+            border-color: rgba(255,255,255,0.4);
+        }
+        .sn-color-dot.active {
+            border-color: rgba(255,255,255,0.6);
+            transform: scale(1.2);
+        }
+
+        .sn-resize {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 18px;
+            height: 18px;
+            cursor: nwse-resize;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            user-select: none;
+        }
+        .sn-note:hover .sn-resize { opacity: 0.4; }
+        .sn-resize::after {
+            content: '';
+            position: absolute;
+            right: 2px;
+            bottom: 2px;
+            width: 10px;
+            height: 10px;
+            border-right: 2px solid rgba(255,255,255,0.3);
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .sn-note .sn-date {
+            font-size: clamp(9px, 0.9vw, 11px);
+            color: rgba(255,255,255,0.15);
+            margin-top: 2px;
+            text-align: right;
+            pointer-events: none;
+            user-select: none;
+        }
+
     </style>
 </head>
 <body>
@@ -1328,6 +1599,7 @@
     <!-- 主容器 -->
     <div class="container">
         <div class="cd-center hidden" id="countdownWidget">設定なし</div>
+        <div class="zhetsu-info" id="zhetsuInfo"></div>
         <!-- 番茄钟 -->
         <div class="pomodoro" id="pomodoroTimer">
             <div class="pomo-row">
@@ -1365,7 +1637,7 @@
         <div class="vo-sub">エラー情報を収集しています。自動的に再起動します。</div>
         <div class="vo-sub" style="margin-bottom:24px"><span id="voPct">0</span>% 完了</div>
         <div class="vo-info-row">
-            <img id="voQrImg" class="vo-qr-img" src="" alt="" style="width:auto;height:auto;max-width:160px;max-height:160px;flex-shrink:0;margin-right:20px">
+            <img id="voQrImg" class="vo-qr-img" alt="" style="width:auto;height:auto;max-width:160px;max-height:160px;flex-shrink:0;margin-right:20px">
             <div>
                 <div class="vo-sub" style="font-size:18px">この問題と可能な解決方法の詳細については、<br>https://www.windows.com/stopcode を参照してください。</div>
                 <div class="vo-code-label">サポート担当者に連絡する場合は、この情報を伝えてください：</div>
@@ -1399,6 +1671,8 @@
         <div class="weather-humid" id="weatherHumid"></div>
         <div class="weather-bar"><div class="weather-bar-fill" id="weatherBar"></div></div>
         <div class="weather-desc" id="weatherDesc">获取天气…</div>
+        <div class="weather-loc" id="weatherLoc" title="クリックで位置切替">广州天河</div>
+        <div class="weather-multiloc" id="weatherMulti"></div>
         <div class="sunmoon" id="sunMoonWidget">
             <span class="sm-row" id="smRow"></span>
         </div>
@@ -1483,6 +1757,18 @@
         let debugMode = false;
         let unixMode = false;
         let dateDebug = false;
+        let globalDebugDate = null;
+        // 折日(zhetsu)相关状态 —— 必须在这里提前声明并赋初值，
+        // 因为 checkZhetsuAuto() 会在 startDashboard() 里被较早调用，
+        // 如果这些变量的赋值语句还没跑到，会被后面的赋值悄悄重置。
+        var zhetsuTimer = null;
+        var zhetsuVisible = false;
+        var zhetsuUserOverride = false; // true=用户手动开关过
+        var zhetsuCurrentWarning = '悪天候にご注意ください';
+        var zhetsuWasMonday = false;
+        function getNowForCountdown() {
+            return (dateDebug && globalDebugDate) ? globalDebugDate : new Date();
+        }
         let datePctState = 0; // 0=隐藏, 1=経過, 2=残り
         let cdTimer = null;
         let batteryDebugPct = null; // null = 真实电量
@@ -1602,9 +1888,174 @@
             if (!window.__rejected && datePctState > 0) {
                 updatePctValue();
             }
+            // 折日倒计时（与主时钟同频跳秒）
+            tickZhetsu();
         }
 
         // ── 天气码转文字 ──
+        // ── 天气定位 ──
+        function getSavedLocation() {
+            try {
+                const raw = localStorage.getItem('tvhead_weather_loc');
+                if (!raw) return null;
+                const loc = JSON.parse(raw);
+                const age = Date.now() - loc.ts;
+                if (age > 86400000) return null; // 24h 过期
+                if (!loc.lat || !loc.lon) return null;
+                loc.title = loc.title || loc.lat + ', ' + loc.lon;
+                return loc;
+            } catch (_) { return null; }
+        }
+        function saveLocation(lat, lon, name, title) {
+            try {
+                localStorage.setItem('tvhead_weather_loc', JSON.stringify({
+                    lat, lon, name: name || '', title: title || '', ts: Date.now()
+                }));
+            } catch (_) {}
+        }
+        function clearLocation() {
+            try { localStorage.removeItem('tvhead_weather_loc'); } catch (_) {}
+        }
+        function updateLocDisplay(name, title) {
+            const $el = document.getElementById('weatherLoc');
+            if (!$el) return;
+            $el.textContent = name || '';
+            $el.title = title ? (title + ' — クリックで位置切替') : 'クリックで位置設定';
+        }
+        async function detectLocation() {
+            console.log('[定位] 开始检测位置…');
+            let denied = false;
+            // 1. 优先尝试浏览器的地理定位 API
+            try {
+                const pos = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        enableHighAccuracy: false,
+                        timeout: 8000,
+                        maximumAge: 600000
+                    });
+                });
+                const lat = pos.coords.latitude.toFixed(4);
+                const lon = pos.coords.longitude.toFixed(4);
+                console.log('[定位] 浏览器定位成功:', lat, lon);
+                // 逆地理编码：取城市名，不暴露精确坐标
+                let name = '';
+                try {
+                    const rev = await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + lat + '&longitude=' + lon + '&localityLanguage=zh', {
+                        signal: AbortSignal.timeout(5000)
+                    });
+                    if (rev.ok) {
+                        const geo = await rev.json();
+                        const parts = [geo.locality, geo.city, geo.principalSubdivision, geo.countryName].filter(Boolean);
+                        name = [...new Set(parts)].join('、');
+                        console.log('[定位] 逆地理编码结果:', name);
+                    } else {
+                        console.warn('[定位] 逆地理 HTTP', rev.status);
+                    }
+                } catch (e) {
+                    console.warn('[定位] 逆地理请求异常:', e.message);
+                }
+                if (!name) name = lat + ', ' + lon;
+                return { lat, lon, name, title: lat + ', ' + lon };
+            } catch (e) {
+                denied = e.code === 1; // PERMISSION_DENIED
+                console.warn('[定位] 浏览器定位失败:', e.message, '(拒绝=' + denied + ')');
+            }
+
+            // 用户拒绝了浏览器定位 → 不偷摸用 IP，直接放弃
+            if (denied) {
+                console.log('[定位] 用户拒绝定位，不再尝试 IP 回退');
+                return null;
+            }
+
+            // 2. 只有非拒绝的情况才尝试 IP 回退（超时/不可用等）
+            try {
+                console.log('[定位] 尝试 IP 定位…');
+                const resp = await fetch('https://ip-api.com/json/?fields=lat,lon,city,regionName,country', {
+                    signal: AbortSignal.timeout(8000)
+                });
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                const data = await resp.json();
+                if (data.lat === undefined || data.lon === undefined) throw new Error('无坐标');
+                console.log('[定位] IP 定位成功:', data.city, data.lat, data.lon);
+                const parts = [data.city, data.regionName, data.country].filter(Boolean);
+                const name = [...new Set(parts)].join('、');
+                return { lat: data.lat, lon: data.lon, name, title: data.lat + ', ' + data.lon };
+            } catch (e) {
+                console.warn('[定位] IP 定位失败:', e.message);
+            }
+
+            // 3. 终极回退：ipinfo.io
+            try {
+                console.log('[定位] 尝试 ipinfo.io…');
+                const resp = await fetch('https://ipinfo.io/json', {
+                    signal: AbortSignal.timeout(8000)
+                });
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                const data = await resp.json();
+                const [lat, lon] = (data.loc || '').split(',');
+                if (!lat || !lon) throw new Error('无坐标');
+                console.log('[定位] ipinfo.io 成功:', data.city, lat, lon);
+                const parts = [data.city, data.region, data.country].filter(Boolean);
+                const name = [...new Set(parts)].join('、');
+                return { lat, lon, name, title: lat + ', ' + lon };
+            } catch (e) {
+                console.warn('[定位] ipinfo.io 失败:', e.message);
+            }
+
+            return null;
+        }
+        // ── 默认地点：广州天河 ──
+        const DEFAULT_LOC = { lat: '23.13', lon: '113.32', name: '广州天河', title: '23.13, 113.32' };
+
+        function getWeatherLocation() {
+            // 有缓存就用缓存（用户手动定位过的），否则默认广州
+            const saved = getSavedLocation();
+            return saved || DEFAULT_LOC;
+        }
+
+        // ── 多地点天气 ──
+        const ML_KEY = 'tvhead_weather_multi';
+        let weatherMultiLocs = [];
+        try { weatherMultiLocs = JSON.parse(localStorage.getItem(ML_KEY)) || []; } catch(_) {}
+        function mlSave() { try { localStorage.setItem(ML_KEY, JSON.stringify(weatherMultiLocs)); } catch(_) {} }
+        function mlRender() {
+            const $con = document.getElementById('weatherMulti');
+            if (!$con) return;
+            $con.innerHTML = '';
+            weatherMultiLocs.forEach(function(loc, i) {
+                const el = document.createElement('span');
+                el.className = 'weather-ml-item';
+                el.textContent = loc.name;
+                el.addEventListener('click', function(e) {
+                    if (e.target.closest('.weather-ml-del')) return;
+                    // 切换到该地点
+                    saveLocation(loc.lat, loc.lon, loc.name, loc.title);
+                    fetchWeather();
+                });
+                // 删除按钮
+                const del = document.createElement('span');
+                del.className = 'weather-ml-del';
+                del.textContent = ' ✕';
+                del.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    weatherMultiLocs.splice(i, 1);
+                    mlSave();
+                    mlRender();
+                });
+                el.appendChild(del);
+                $con.appendChild(el);
+            });
+        }
+        function mlAdd(lat, lon, name, title) {
+            // 去重
+            const dup = weatherMultiLocs.find(function(l) { return l.lat === lat && l.lon === lon; });
+            if (dup) return;
+            weatherMultiLocs.push({ lat: String(lat), lon: String(lon), name: name || '', title: title || (lat + ', ' + lon) });
+            mlSave();
+            mlRender();
+        }
+        mlRender();
+
         function weatherCodeToText(code) {
             // WMO 天气码 → 日本語
             if (code === 0) return '快晴';
@@ -1626,15 +2077,30 @@
             const $temp = document.getElementById('weatherTemp');
             const $humid = document.getElementById('weatherHumid');
             const $desc = document.getElementById('weatherDesc');
+            const $loc = document.getElementById('weatherLoc');
 
             $temp.textContent = '--';
             $humid.textContent = '';
             $desc.textContent = '获取天气…';
             $desc.className = 'weather-desc weather-loading';
 
+            // 获取坐标（缓存 or 默认广州天河）
+            const loc = getWeatherLocation();
+            if (!loc) {
+                $desc.textContent = '无法定位';
+                $desc.className = 'weather-desc weather-offline';
+                return;
+            }
+            updateLocDisplay(loc.name, loc.title);
+
             try {
-                // 广州天河坐标
-                const resp = await fetch('https://api.open-meteo.com/v1/forecast?latitude=23.13&longitude=113.32&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code&timezone=Asia%2FShanghai', {
+                const params = new URLSearchParams({
+                    latitude: loc.lat,
+                    longitude: loc.lon,
+                    current: 'temperature_2m,apparent_temperature,relative_humidity_2m,weather_code',
+                    timezone: 'auto'
+                });
+                const resp = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`, {
                     signal: AbortSignal.timeout(8000)
                 });
                 if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
@@ -1798,7 +2264,7 @@
                 const dayIdx = (i + 1) % 7; // 0=月→0, 6=日→6
                 const isToday = today === dayIdx;
                 html += `<div class="weekcal-day${isToday ? ' today' : ''}">`;
-                html += `<span class="day-name">${DAYS_JP[dayIdx]}</span>`;
+                html += `<span class="day-name${dayIdx === 1 ? ' day-name-moon' : ''}">${DAYS_JP[dayIdx]}</span>`;
                 html += `${dateNum}</div>`;
             }
             $weekcalRow.innerHTML = html;
@@ -1819,9 +2285,18 @@
         }
 
         function startDashboard(level) {
+            // 从上次的调试日期恢复（这样刷新页面不会把测试状态清空）
+            try {
+                var savedDebug = localStorage.getItem('tvhead_date_debug');
+                if (savedDebug) {
+                    var parts = savedDebug.split('-').map(Number);
+                    globalDebugDate = new Date(parts[0], parts[1] - 1, parts[2]);
+                    dateDebug = true;
+                }
+            } catch (_) {}
             if (level === 'rejected') {
                 window.__rejected = true;
-                document.querySelectorAll('.weekcal, .weather, .battery-v, .pomodoro, .countdown, .pct-mask').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.weekcal, .weather, .battery-v, .pomodoro, .countdown, .pct-mask, .sn-note, #snAddFab, #weatherMulti').forEach(el => el.style.display = 'none');
                 document.getElementById('timeAmPm').style.display = 'none';
                 // Unix epoch 时钟：从 00:00:00 开始往上数
                 document.getElementById('dateText').textContent = '1970-01-01';
@@ -1846,14 +2321,23 @@
                 }
                 tickEpoch();
                 setInterval(tickEpoch, 1000);
-                initSysStat();
+                document.getElementById('sysstat').style.display = 'none';
                 return;
             }
 
             // 必需：時間・日付・週間カレンダー
             updateTime();
             setInterval(updateTime, 1000);
-            updateWeekCal();
+            if (dateDebug && globalDebugDate) {
+                var rd = globalDebugDate;
+                var rw = WEEKDAYS[rd.getDay()];
+                document.getElementById('dateText').textContent = `${rd.getFullYear()}年${rd.getMonth() + 1}月${rd.getDate()}日 ${rw}`;
+            }
+            updateWeekCal(dateDebug ? globalDebugDate : undefined);
+            // 折日自动显示（周日22:00~周一22:00）—— 挪到 minimal 判断之前，
+            // 这样"仅必要"同意等级也会正确初始化，不会漏挂 60 秒轮询
+            checkZhetsuAuto();
+            setInterval(checkZhetsuAuto, 60000);
 
             if (level === 'minimal') {
                 // 必要のみ：ポモドーロも許可
@@ -1861,11 +2345,15 @@
                 document.getElementById('weatherWidget').style.display = 'none';
                 document.getElementById('batteryV').style.display = 'none';
                 document.getElementById('countdownWidget').style.display = 'none';
-                initSysStat();
+                var $fab = document.getElementById('snAddFab');
+                if ($fab) $fab.style.display = 'none';
+                document.querySelectorAll('.sn-note').forEach(el => el.style.display = 'none');
+                document.getElementById('sysstat').style.display = 'none';
                 return;
             }
 
             // all：全部許可（広告も含む）
+            snInit(); // 便签可能在 DOMContentLoaded 时因无 consent 被跳过，这里重试
             document.getElementById('batteryV').classList.add('show');
             document.getElementById('countdownWidget').style.display = '';
             document.getElementById('pomodoroTimer').style.display = '';
@@ -1873,6 +2361,66 @@
             setTimeout(updateBattery, 500);
             fetchWeather();
             setInterval(fetchWeather, 30 * 60 * 1000);
+            // 点击地点文字 → 手动定位（不自动偷跑）
+            document.getElementById('weatherLoc').addEventListener('click', async () => {
+                const input = prompt('空 → 現在地を自動検出\n座標 (lat, lon) → 手動設定\n0 → 広州天河にリセット\n+ → 現在地をリスト保存', '');
+                if (input === null) return;
+                const trimmed = input.trim();
+
+                // 重置为默认广州
+                if (trimmed === '0') {
+                    clearLocation();
+                    await fetchWeather();
+                    return;
+                }
+
+                // 自动定位
+                if (trimmed === '') {
+                    const $d = document.getElementById('weatherDesc');
+                    $d.textContent = '位置情報を取得中…';
+                    $d.className = 'weather-desc weather-loading';
+                    const detected = await detectLocation();
+                    if (detected) {
+                        saveLocation(detected.lat, detected.lon, detected.name, detected.title);
+                    } else {
+                        alert('位置情報の取得に失敗しました');
+                    }
+                    await fetchWeather();
+                    return;
+                }
+
+                // + ：把当前地点加入多地点列表
+                if (trimmed === '+') {
+                    const loc = getWeatherLocation();
+                    if (loc && loc !== DEFAULT_LOC) {
+                        mlAdd(loc.lat, loc.lon, loc.name, loc.title);
+                    } else {
+                        mlAdd(DEFAULT_LOC.lat, DEFAULT_LOC.lon, DEFAULT_LOC.name, DEFAULT_LOC.title);
+                    }
+                    return;
+                }
+
+                // 手动输入经纬度
+                const parts = trimmed.split(/[,，\s]+/).filter(Boolean);
+                if (parts.length >= 2) {
+                    const lat = parseFloat(parts[0]);
+                    const lon = parseFloat(parts[1]);
+                    if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+                        const latS = lat.toFixed(4);
+                        const lonS = lon.toFixed(4);
+                        const label = prompt('この場所に名前をつける（空→座標表示）', '');
+                        const name = (label && label.trim()) ? label.trim() : latS + ', ' + lonS;
+                        saveLocation(latS, lonS, name, latS + ', ' + lonS);
+                        // 询问是否也加入列表
+                        if (confirm('リストにも追加しますか？')) {
+                            mlAdd(latS, lonS, name, latS + ', ' + lonS);
+                        }
+                        await fetchWeather();
+                        return;
+                    }
+                }
+                alert('形式エラー。例：39.9042, 116.4074（北京）');
+            });
             fetchSunMoon();
             fetchFX(true);
             fxTimer = setInterval(fetchFX, 2000);
@@ -2022,7 +2570,21 @@ function setPremium() {
 
         // 从后端 API 获取真实系统信息
         let _sysCache = null;
+        function showSysUnavailable() {
+            document.getElementById('ssCpuVal').textContent = '--';
+            document.getElementById('ssCpuFill').style.width = '0%';
+            document.getElementById('ssMemVal').textContent = '--';
+            document.getElementById('ssMemFill').style.width = '0%';
+            document.getElementById('ssLed').className = 'ss-led na';
+        }
         function fetchSysInfo() {
+            // file:// 协议下发起 /api/sysinfo 必然被 CORS 挡掉，直接判定不可用，
+            // 不用真的发一次请求再等它报错
+            if (location.protocol === 'file:') {
+                showSysUnavailable();
+                if (ssInterval) { clearInterval(ssInterval); ssInterval = null; }
+                return;
+            }
             fetch('/api/sysinfo')
                 .then(function(r){
                     if (!r.ok) throw new Error('unavailable');
@@ -2080,12 +2642,9 @@ function setPremium() {
                     }
                 })
                 .catch(function(){
-                    // API 不可用 → 全部灰掉
-                    document.getElementById('ssCpuVal').textContent = '--';
-                    document.getElementById('ssCpuFill').style.width = '0%';
-                    document.getElementById('ssMemVal').textContent = '--';
-                    document.getElementById('ssMemFill').style.width = '0%';
-                    document.getElementById('ssLed').className = 'ss-led na';
+                    // API 不可用 → 全部灰掉，并停掉 2 秒轮询，别一直重试报错刷屏
+                    showSysUnavailable();
+                    if (ssInterval) { clearInterval(ssInterval); ssInterval = null; }
                 });
         }
 
@@ -2109,7 +2668,7 @@ function setPremium() {
             }
             el.classList.remove('hidden');
             const target = new Date(stored);
-            const now = new Date();
+            const now = getNowForCountdown();
             const total = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
             const mm = target.getMonth() + 1;
             const dd = target.getDate();
@@ -2527,11 +3086,14 @@ function setPremium() {
 
         // ── 日付デバッグ ──
         $date.addEventListener('dblclick', () => {
-            // 调试模式退出时也收起百分比
+            // 保存百分比状态，调试模式退出后恢复
+            const savedPctState = datePctState;
             document.getElementById('dateDisplay').classList.remove('show-pct');
             datePctState = 0;
             if (dateDebug) {
                 dateDebug = false;
+                globalDebugDate = null;
+                try { localStorage.removeItem('tvhead_date_debug'); } catch (_) {}
                 if (window.__rejected) {
                     document.getElementById('dateText').textContent = '1970-01-01';
                     updateWeekCal(new Date());
@@ -2539,6 +3101,14 @@ function setPremium() {
                     updateTime();
                     updateWeekCal(new Date());
                 }
+                // 退出调试模式后恢复百分比显示
+                if (savedPctState > 0) {
+                    datePctState = savedPctState;
+                    document.getElementById('dateDisplay').classList.add('show-pct');
+                    updatePctValue();
+                }
+                updateCountdown();
+                checkZhetsuAuto();
                 return;
             }
             const raw = prompt('日付デバッグ：YYYYMMDD', '19190810');
@@ -2553,7 +3123,17 @@ function setPremium() {
             document.getElementById('dateText').textContent = `${y}年${m}月${d}日 ${w}`;
             document.getElementById('dateDisplay').classList.remove('show-pct');
             dateDebug = true;
+            globalDebugDate = debugDate;
+            try { localStorage.setItem('tvhead_date_debug', `${y}-${m}-${d}`); } catch (_) {}
+            // 进入调试模式后恢复百分比显示
+            if (savedPctState > 0) {
+                datePctState = savedPctState;
+                document.getElementById('dateDisplay').classList.add('show-pct');
+                updatePctValue();
+            }
             updateWeekCal(debugDate);
+            updateCountdown();
+            checkZhetsuAuto();
             // 🧨 Flash クラッシュ
             if (nums === '20000101') {
                 document.getElementById('flashCrash').classList.add('show');
@@ -2562,7 +3142,122 @@ function setPremium() {
         });
 
         // 点击周历/记日器切换显示
-        document.getElementById('weekCal').addEventListener('click', () => {
+        function getNextMonday(now) {
+            var d = new Date(now);
+            var day = d.getDay(); // 0=日, 1=月
+            if (day === 1) {
+                // 今天就是折日
+                d.setHours(0, 0, 0, 0);
+                return d;
+            }
+            d.setDate(d.getDate() + ((8 - day) % 7 || 7));
+            d.setHours(0, 0, 0, 0);
+            return d;
+        }
+        function isZhetsuWindow(now) {
+            // 周日22:00 ~ 周一22:00
+            var day = now.getDay();
+            var hour = now.getHours();
+            if (day === 0 && hour >= 22) return true;  // 周日 22:00+
+            if (day === 1 && hour < 22) return true;   // 周一 00:00~22:00
+            return false;
+        }
+        function formatZhetsu(ms) {
+            if (ms <= 0) return '📺 黒TVからの情報 本日は折日です ⚠';
+            var totalSec = Math.floor(ms / 1000);
+            var d = Math.floor(totalSec / 86400);
+            totalSec %= 86400;
+            var h = Math.floor(totalSec / 3600);
+            totalSec %= 3600;
+            var parts = [];
+            if (d > 0) parts.push(d + '日');
+            var m = Math.floor(totalSec / 60);
+            if (h > 0 || d > 0) {
+                // 1时间以上：不带秒
+                if (h > 0 && m > 0) parts.push(h + '時間' + m + '分');
+                else if (h > 0) parts.push(h + '時間');
+                else if (m > 0) parts.push(m + '分');
+                // else: m=0且h=0→只有日
+            } else {
+                // 1时间未满：带秒
+                var s = totalSec % 60;
+                parts.push(m + '分' + s + '秒');
+            }
+            return '📺 黒TVからの情報 折日まで ' + parts.join(' ');
+        }
+        function zhetsuShow() {
+            if (zhetsuVisible) return;
+            zhetsuVisible = true;
+            document.getElementById('zhetsuInfo').classList.add('show');
+            tickZhetsu();
+        }
+        function zhetsuHide() {
+            if (!zhetsuVisible) return;
+            zhetsuVisible = false;
+            var el = document.getElementById('zhetsuInfo');
+            el.classList.remove('show');
+            // 等过渡动画播完再清空内容
+            setTimeout(function() {
+                el.classList.remove('danger');
+                el.innerHTML = '';
+            }, 400);
+        }
+        function pickZhetsuWarning() {
+            var pool = [
+                '悪天候にご注意ください',
+                '外出の際は傘をお忘れなく',
+                '突風・大雨のおそれあり',
+                '両地の相克による気象混乱が予想されます',
+                '今日は何が起きてもおかしくありません'
+            ];
+            zhetsuCurrentWarning = pool[Math.floor(Math.random() * pool.length)];
+        }
+        function tickZhetsu() {
+            if (!zhetsuVisible) return;
+            var now = getNowForCountdown();
+            var nextMon = getNextMonday(now);
+            var diff = nextMon - now;
+            var el = document.getElementById('zhetsuInfo');
+            var txt = formatZhetsu(diff);
+            var isMonday = diff <= 0;
+            if (isMonday) {
+                if (!zhetsuWasMonday) pickZhetsuWarning();
+                txt = txt.replace('折日', '<span class="zhetsu-highlight">折日</span>');
+                txt += '<br><span class="zhetsu-sub">' + (zhetsuCurrentWarning || '悪天候にご注意ください') + '</span>';
+                el.classList.add('danger');
+            } else {
+                el.classList.remove('danger');
+            }
+            zhetsuWasMonday = isMonday;
+            el.innerHTML = txt;
+        }
+        function checkZhetsuAuto() {
+            var now = getNowForCountdown();
+            var inWindow = isZhetsuWindow(now);
+            if (!inWindow) {
+                // 离开折日窗口后重置手动override，否则一旦手动关过一次
+                // 之后（包括下次真正的周一）就再也不会自动弹出了
+                zhetsuUserOverride = false;
+                zhetsuHide();
+                return;
+            }
+            if (!zhetsuUserOverride) {
+                zhetsuShow();
+            }
+        }
+        document.getElementById('weekCal').addEventListener('click', function(e) {
+            var dayName = e.target.closest('.day-name');
+            if (dayName && dayName.textContent.trim() === '月') {
+                // 点击「月」→ 折日倒计时
+                zhetsuUserOverride = true;
+                if (zhetsuVisible) {
+                    zhetsuHide();
+                } else {
+                    zhetsuShow();
+                }
+                return;
+            }
+            // 点击周历其他区域 → 记日器切换
             document.getElementById('countdownWidget').classList.toggle('hidden');
         });
 
@@ -2680,7 +3375,7 @@ function setPremium() {
             '⚫ <span class="hl">黒側 · 折日の朝</span> · 起きない · 起きられない · 折日の前の夜は<span class="hl">長かった</span> · 白いほうが起こすのを、待っている',
             '🏫 <span class="hl">折日 · 黒側高校</span> · 出席率<span class="hl">やや低め</span> · 理由：風、雨、気分 · どれも「仕方ない」で片付く · それが折日',
             '🍲 <span class="hl">風見町 · 折日鍋</span> · 月曜限定メニュー · 具は<span class="hl">日によって変わる</span> · 今日は何が入ってるか · 開けてからのお楽しみ · ¥780',
-            '🥟 <span class="hl">谷灯町 · 折日まん</span> · 一個<span class="hl">¥100</span> · 折日の日だけ · あんこ · カレー · あとは<span class="hl">不明</span> · 不明のやつが一番うまい',
+            '🥟 <span class="hl">谷灯町 · 折日まん</span> · 一個<span class="hl">¥100</span> · 折日の日だけ · あんこ · あとは<span class="hl">不明</span> · 不明のやつが一番うまい',
             '🍺 <span class="hl">折日のビール</span> · 月曜なのに飲む · <span class="hl">月曜だから</span>飲む · どちらでもいい · 風見町の自販機、今日はよく売れる',
             '🩹 <span class="hl">東嶺薬局 · 折日セット</span> · 頭痛薬＋絆創膏＋<span class="hl">のど飴</span> · ¥980 · 月曜の朝にまとめて買う人用 · 毎週同じ顔が来る',
             '💤 <span class="hl">折日 · 午後の睡魔</span> · 気圧のせい · 誰もが<span class="hl">目を開けていられない</span> · 教室の窓に打ちつける雨 · 先生も、少しだけ黙る',
@@ -2691,7 +3386,7 @@ function setPremium() {
             const d = new Date().getDay();
             return d === 1 ? ADS.concat(AD_DLC) : ADS;
         }
-        const $adBanner = document.getElementById('adBanner');
+        var $adBanner = document.getElementById('adBanner');
         const $adText = document.getElementById('adText');
         const $adTextWrap = document.getElementById('adTextWrap');
         const $adReasonWrap = document.getElementById('adReasonWrap');
@@ -3021,6 +3716,7 @@ function setPremium() {
             audioViz.classList.remove('active');
             audioViz.style.left = '';
             audioViz.style.width = '';
+            audioViz.style.bottom = '';
             const actx = audioCanvas.getContext('2d');
             actx.clearRect(0, 0, audioCanvas.width, audioCanvas.height);
             if (window.__adResizeObserver) {
@@ -3275,8 +3971,399 @@ function setPremium() {
         window.spawnStaticVirus = spawnStaticVirus;
         window.__virusPopups = virusPopups;
 
-        console.log('📺 Dashboard — 極簡黒科技');
+                // ── Sticky Notes (UWP 浮动便签) ──
+        const SN_KEY = 'dash_sticky_notes';
+        const SN_COLORS = [
+            { bg: '#3A3520', border: '#b8a84a' },  // 暗黄
+            { bg: '#1E3320', border: '#4a9a5a' },  // 暗绿
+            { bg: '#1E2A35', border: '#4a7a9a' },  // 暗蓝
+            { bg: '#352025', border: '#9a4a5a' },  // 暗粉
+            { bg: '#2A2035', border: '#7a4a9a' },  // 暗紫
+        ];
+        let snNotes = [];
+        try { snNotes = JSON.parse(localStorage.getItem(SN_KEY)) || []; } catch(_) {}
+        function snSave() { try { localStorage.setItem(SN_KEY, JSON.stringify(snNotes)); } catch(_) {} }
+        snNotes = snNotes.map(function(n) {
+            if (typeof n === 'string') return { text: n, color: 0, x: 80, y: 80, w: 240, h: 220, raw: false };
+            if (n.raw === undefined) n.raw = false;
+            if (!n.w && n.w !== 0) n.w = 320;
+            if (!n.h && n.h !== 0) n.h = 100;
+            return n;
+        });
+
+        function snCreateEl(note, i) {
+            const c = SN_COLORS[(note.color || 0) % SN_COLORS.length];
+            const div = document.createElement('div');
+            div.className = 'sn-note';
+            div.style.left = (note.x || 80) + 'px';
+            div.style.top = (note.y || 80) + 'px';
+            div.style.width = (note.w || 240) + 'px';
+            div.style.height = (note.h || 220) + 'px';
+            div.style.background = c.bg;
+            div.style.borderLeft = '3px solid ' + c.border;
+
+            // Colors
+            var colorsDiv = document.createElement('div');
+            colorsDiv.className = 'sn-colors';
+            for (var ci = 0; ci < SN_COLORS.length; ci++) {
+                (function(cix) {
+                    var dot = document.createElement('span');
+                    dot.className = 'sn-color-dot';
+                    dot.style.background = SN_COLORS[cix].bg;
+                    if (cix === (note.color || 0)) dot.classList.add('active');
+                    dot.addEventListener('mousedown', function(e) { e.stopPropagation(); });
+                    dot.addEventListener('click', function() {
+                        snNotes[i].color = cix;
+                        snSave();
+                        snRenderAll();
+                    });
+                    colorsDiv.appendChild(dot);
+                })(ci);
+            }
+            div.appendChild(colorsDiv);
+
+            // Delete
+            const del = document.createElement('span');
+            del.className = 'sn-del';
+            del.textContent = '\u00d7';
+            del.addEventListener('mousedown', function(e) { e.stopPropagation(); });
+            del.addEventListener('click', function() {
+                snNotes.splice(i, 1);
+                snSave();
+                snRenderAll();
+            });
+            div.appendChild(del);
+
+            // BBCode <-> HTML converters
+            function bb2html(bb) {
+                return bb.replace(/\[b\]([\s\S]*?)\[\/b\]/gi, '<b>$1</b>')
+                    .replace(/\[i\]([\s\S]*?)\[\/i\]/gi, '<i>$1</i>')
+                    .replace(/\[u\]([\s\S]*?)\[\/u\]/gi, '<u>$1</u>')
+                    .replace(/\[s\]([\s\S]*?)\[\/s\]/gi, '<strike>$1</strike>')
+                    .replace(/\[size=(\d+)\]([\s\S]*?)\[\/size\]/gi, '<span style="font-size:$1px">$2</span>')
+                    .replace(/\[color=([#\w]+)\]([\s\S]*?)\[\/color\]/gi, '<span style="color:$1">$2</span>')
+                    .replace(/\[url\]([\s\S]*?)\[\/url\]/gi, '<a href="$1" target="_blank">$1</a>')
+                    .replace(/\[url=(\S+)\]([\s\S]*?)\[\/url\]/gi, '<a href="$1" target="_blank">$2</a>')
+                    .replace(/\[img\]([\s\S]*?)\[\/img\]/gi, '<img src="$1" style="max-width:100%;border-radius:2px;margin:4px 0;cursor:pointer">')
+                    .replace(/\[img=(\d+)x(\d+)\]([\s\S]*?)\[\/img\]/gi, '<img src="$3" width="$1" height="$2" style="border-radius:2px;margin:4px 0;cursor:pointer">')
+                    .replace(/\[center\]([\s\S]*?)\[\/center\]/gi, '<div style="text-align:center">$1</div>')
+                    .replace(/\[code\]([\s\S]*?)\[\/code\]/gi, '<code style="font-family:monospace;background:rgba(0,0,0,0.2);padding:2px 4px">$1</code>')
+                    .replace(/\[hr\]/gi, '<hr style="border:none;border-top:1px solid rgba(255,255,255,0.1);margin:6px 0">')
+                    .replace(/\[\*\]\s*([^\n]*)/gi, '<span style="display:block;margin-left:14px">\u2022 $1</span>');
+            }
+            function html2bb(html) {
+                return html.replace(/<b>([\s\S]*?)<\/b>/gi, '[b]$1[/b]')
+                    .replace(/<i>([\s\S]*?)<\/i>/gi, '[i]$1[/i]')
+                    .replace(/<u>([\s\S]*?)<\/u>/gi, '[u]$1[/u]')
+                    .replace(/<strike>([\s\S]*?)<\/strike>/gi, '[s]$1[/s]')
+                    .replace(/<span[^>]*font-size:(\d+)px[^>]*>([\s\S]*?)<\/span>/gi, '[size=$1]$2[/size]')
+                    .replace(/<span[^>]*color:([#\w]+)[^>]*>([\s\S]*?)<\/span>/gi, '[color=$1]$2[/color]')
+                    .replace(/<a[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi, '[url=$1]$2[/url]')
+                    .replace(/<img[^>]*width="(\d+)"[^>]*height="(\d+)"[^>]*src="([^"]+)"[^>]*>/gi, '[img=$1x$2]$3[/img]')
+                    .replace(/<img[^>]*src="([^"]+)"[^>]*>/gi, '[img]$1[/img]')
+                    .replace(/<div[^>]*text-align:center[^>]*>([\s\S]*?)<\/div>/gi, '[center]$1[/center]')
+                    .replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, '[code]$1[/code]')
+                    .replace(/<hr[^>]*>/gi, '[hr]')
+                    .replace(/<span[^>]*>\u2022\s*([\s\S]*?)<\/span>/gi, '[*] $1');
+            }
+
+            // Text
+            var text = document.createElement('div');
+            text.className = 'sn-text';
+            text.innerHTML = note.raw ? (note.text || '') : bb2html(note.text || '');
+            text.contentEditable = true;
+            function snSaveText() {
+                var h = text.innerHTML.trim() || '';
+                snNotes[i].text = note.raw ? h : html2bb(h);
+                snSave();
+            }
+            function snBBCode() {
+                if (note.raw) return;
+                var sel = window.getSelection();
+                var hasFocus = (sel && sel.rangeCount && text.contains(sel.anchorNode));
+                var saved = null;
+                if (hasFocus) {
+                    try { var r = sel.getRangeAt(0); saved = { start: r.startContainer, startOff: r.startOffset, end: r.endContainer, endOff: r.endOffset }; } catch(e) {}
+                }
+                var html = text.innerHTML;
+                if (hasFocus) html = html.replace(/<marker>[\s\S]*?<\/marker>/g, '') + '<marker></marker>';
+                var prev = html;
+                html = bb2html(html);
+                if (html !== prev) {
+                    text.innerHTML = html;
+                    snSaveText();
+                    if (hasFocus && saved) {
+                        var marker = text.querySelector('marker');
+                        if (marker) {
+                            try { var r2 = document.createRange(); r2.setStartBefore(marker); r2.collapse(true); sel.removeAllRanges(); sel.addRange(r2); } catch(e) {}
+                            marker.remove();
+                        }
+                    }
+                } else if (hasFocus) {
+                    var marker = text.querySelector('marker');
+                    if (marker) marker.remove();
+                }
+            }
+            text.addEventListener('blur', snSaveText);
+            text.addEventListener('input', function() { snSaveText(); snBBCode(); });
+            text.addEventListener('paste', function(e) {
+                var items = e.clipboardData && e.clipboardData.items;
+                if (!items) return;
+                for (var pi = 0; pi < items.length; pi++) {
+                    if (items[pi].type.indexOf('image') === 0) {
+                        e.preventDefault();
+                        var file = items[pi].getAsFile();
+                        if (!file) continue;
+                        var reader = new FileReader();
+                        reader.onload = function(ev) {
+                            var dataUrl = ev.target.result;
+                            document.execCommand('insertImage', false, dataUrl);
+                            snBBCode();
+                            snSaveText();
+                        };
+                        reader.readAsDataURL(file);
+                        break;
+                    }
+                }
+            });
+            text.addEventListener('click', function(e) {
+                var a = e.target.closest('a');
+                if (a && a.href) {
+                    e.preventDefault();
+                    window.open(a.href, '_blank');
+                }
+            });
+            text.addEventListener('dblclick', function(e) {
+                var img = e.target.closest('img');
+                if (!img) return;
+                e.preventDefault();
+                var w = prompt('幅 (px):', img.width);
+                if (w && !isNaN(w)) {
+                    img.width = parseInt(w);
+                    snSaveText();
+                }
+            });
+            div.appendChild(text);
+
+            // Toolbar
+            var tb = document.createElement('div');
+            tb.className = 'sn-toolbar';
+            var btns = [
+                { cmd: 'bold', label: 'B' },
+                { cmd: 'italic', label: 'I' },
+                { cmd: 'underline', label: 'U' },
+                { cmd: 'strikeThrough', label: 'S' },
+            ];
+            // Raw mode toggle
+            var rawBtn = document.createElement('span');
+            rawBtn.className = 'sn-btn sn-raw';
+            rawBtn.textContent = '[ ]';
+            rawBtn.title = 'BBCode 表示切替';
+            rawBtn.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
+            rawBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                note.raw = !note.raw;
+                if (note.raw) {
+                    text.innerHTML = html2bb(text.innerHTML);
+                } else {
+                    text.innerHTML = bb2html(text.innerHTML);
+                }
+                rawBtn.classList.toggle('on', note.raw);
+                snSaveText();
+                snSave();
+            });
+            if (note.raw) rawBtn.classList.add('on');
+            tb.appendChild(rawBtn);
+
+            var bels = [];
+            btns.forEach(function(f) {
+                var b = document.createElement('span');
+                b.className = 'sn-btn';
+                b.textContent = f.label;
+                b.dataset.cmd = f.cmd;
+                b.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
+                b.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    document.execCommand(f.cmd, false, null);
+                    text.focus();
+                    bels.forEach(function(x) {
+                        x.classList.toggle('on', document.queryCommandState(x.dataset.cmd));
+                    });
+                    snSaveText();
+                });
+                tb.appendChild(b);
+                bels.push(b);
+            });
+            div.appendChild(tb);
+
+            function upB() {
+                bels.forEach(function(x) {
+                    x.classList.toggle('on', document.queryCommandState(x.dataset.cmd));
+                });
+            }
+            text.addEventListener('mouseup', upB);
+            text.addEventListener('keyup', upB);
+
+            text.addEventListener('focus', function() { tb.classList.add('show'); });
+            text.addEventListener('blur', function() {
+                setTimeout(function() {
+                    if (!text.contains(document.activeElement)) tb.classList.remove('show');
+                }, 200);
+            });
+            div.addEventListener('mouseenter', function() { tb.classList.add('show'); });
+            div.addEventListener('mouseleave', function() {
+                if (!text.contains(document.activeElement) && !tb.contains(document.activeElement)) {
+                    tb.classList.remove('show');
+                }
+            });
+
+            // Resize handle
+            var rh = document.createElement('div');
+            rh.className = 'sn-resize';
+            div.appendChild(rh);
+
+            // Timestamp
+            const ts = document.createElement('div');
+            ts.className = 'sn-date';
+            const d = note.created ? new Date(note.created) : new Date();
+            ts.textContent = d.toLocaleDateString('ja-JP', { month:'2-digit', day:'2-digit' }) + '  ' +
+                d.toLocaleTimeString('ja-JP', { hour:'2-digit', minute:'2-digit', hour12:false });
+            div.appendChild(ts);
+
+            // Drag
+            var dragging = false, startX, startY, origX, origY;
+            function dragStart(e) {
+                if (e.target !== div && e.target.closest('.sn-text')) return;
+                if (e.target.closest('.sn-del')) return;
+                var ev = e.touches ? e.touches[0] : e;
+                dragging = true;
+                startX = ev.clientX;
+                startY = ev.clientY;
+                origX = note.x || 80;
+                origY = note.y || 80;
+                div.style.zIndex = 50;
+                div.style.transition = 'none';
+                e.preventDefault();
+            }
+            function dragMove(e) {
+                if (!dragging) return;
+                var ev = e.touches ? e.touches[0] : e;
+                div.style.left = (origX + ev.clientX - startX) + 'px';
+                div.style.top = (origY + ev.clientY - startY) + 'px';
+                e.preventDefault();
+            }
+            function dragEnd() {
+                if (!dragging) return;
+                dragging = false;
+                div.style.transition = '';
+                div.style.zIndex = 45;
+                snNotes[i].x = parseInt(div.style.left) || 80;
+                snNotes[i].y = parseInt(div.style.top) || 80;
+                snSave();
+            }
+            div.addEventListener('mousedown', dragStart);
+            document.addEventListener('mousemove', dragMove);
+            document.addEventListener('mouseup', dragEnd);
+            div.addEventListener('touchstart', dragStart, { passive: false });
+            document.addEventListener('touchmove', dragMove, { passive: false });
+            document.addEventListener('touchend', dragEnd);
+
+            // Resize
+            var resizing = false, rsX, rsY, rOrigW, rOrigH;
+            function resizeStart(e) {
+                if (!e.target.closest('.sn-resize')) return;
+                var ev = e.touches ? e.touches[0] : e;
+                resizing = true;
+                rsX = ev.clientX;
+                rsY = ev.clientY;
+                rOrigW = div.offsetWidth;
+                rOrigH = div.offsetHeight;
+                div.style.zIndex = 50;
+                div.style.transition = 'none';
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            function resizeMove(e) {
+                if (!resizing) return;
+                var ev = e.touches ? e.touches[0] : e;
+                var dw = ev.clientX - rsX;
+                var dh = ev.clientY - rsY;
+                div.style.width = Math.max(150, rOrigW + dw) + 'px';
+                div.style.height = Math.max(50, rOrigH + dh) + 'px';
+                e.preventDefault();
+            }
+            function resizeEnd() {
+                if (!resizing) return;
+                resizing = false;
+                div.style.transition = '';
+                div.style.zIndex = 45;
+                snNotes[i].w = parseInt(div.style.width) || 240;
+                snNotes[i].h = parseInt(div.style.height) || 220;
+                snSave();
+            }
+            rh.addEventListener('mousedown', resizeStart);
+            document.addEventListener('mousemove', resizeMove);
+            document.addEventListener('mouseup', resizeEnd);
+            rh.addEventListener('touchstart', resizeStart, { passive: false });
+            document.addEventListener('touchmove', resizeMove, { passive: false });
+            document.addEventListener('touchend', resizeEnd);
+
+            return div;
+        }
+
+        function snRenderAll() {
+            var notes = document.querySelectorAll('.sn-note');
+            for (var j = 0; j < notes.length; j++) notes[j].remove();
+            for (var j = 0; j < snNotes.length; j++) {
+                document.body.appendChild(snCreateEl(snNotes[j], j));
+            }
+        }
+
+        function snInit() {
+            // 没有完整 cookie 同意 → 不启动便签
+            var level = (typeof getConsentLevel === 'function') ? getConsentLevel() : null;
+            var fab = document.getElementById('snAddFab');
+            if (level !== 'all') {
+                if (fab) fab.style.display = 'none';
+                return;
+            }
+            if (!fab) return;
+            fab.style.display = '';
+            if (!fab._snInited) {
+                fab._snInited = true;
+                fab.addEventListener('click', function() {
+                    var ww = window.innerWidth;
+                    var wh = window.innerHeight;
+                    snNotes.push({
+                        text: '',
+                        color: 0,
+                        raw: false,
+                        w: 320,
+                        h: 100,
+                        x: Math.round(20 + Math.random() * (ww - 360)),
+                        y: Math.round(20 + Math.random() * (wh - 280)),
+                        created: Date.now()
+                    });
+                    snSave();
+                    snRenderAll();
+                    var allNotes = document.querySelectorAll('.sn-note');
+                    var last = allNotes[allNotes.length - 1];
+                    if (last) { var ta = last.querySelector('.sn-text'); if (ta) ta.focus(); }
+                });
+            }
+            snRenderAll();
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', snInit);
+        } else {
+            snInit();
+        }
+        console.log('📺 Created by DeepSeek V4 Flash'),
+        console.log('🐞🔨 Bugs fixed by Claude Sonnet 5');
     </script>
+
+    <!-- Sticky Notes (UWP 风格) -->
+    <span class="sn-add-fab" id="snAddFab">＋ 付箋</span>
 
     <!-- 🧱 坍缩系统 -->
     <div id="collapseHint">G — 重力解放 / R — 修復</div>
@@ -3305,6 +4392,10 @@ function setPremium() {
             { sel: '#audioViz', mass: 0.4 },
             { sel: '.qr-popup', mass: 0.6 },
             { sel: '#sysstat', mass: 0.8 },
+            { sel: '.sn-note', mass: 0.3 },
+            { sel: '#snAddFab', mass: 0.3 },
+            { sel: '#weatherMulti', mass: 0.4 },
+            { sel: '#zhetsuInfo', mass: 0.2 },
         ];
 
         function saveStyles(el) {
@@ -3391,6 +4482,14 @@ function setPremium() {
 
             const items = [];
             for (const t of TARGETS) {
+                if (t.sel === '.sn-note') {
+                    document.querySelectorAll('.sn-note').forEach(function(el) {
+                        var r = el.getBoundingClientRect();
+                        if (r.width < 4 || r.height < 4) return;
+                        items.push({ el: el, mass: t.mass, rect: r });
+                    });
+                    continue;
+                }
                 const el = document.querySelector(t.sel);
                 if (!el) continue;
                 const r = (el.id === 'dateDisplay') ? getDateTightRect(el) : el.getBoundingClientRect();
@@ -3614,6 +4713,7 @@ function setPremium() {
 
         document.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            if (e.target.closest('[contenteditable]')) return;
             if (e.key.toLowerCase() === 'g' && !collapsed) collapse();
             else if (e.key.toLowerCase() === 'r' && collapsed) location.reload();
             else if (e.key.toLowerCase() === 'v' && collapsed && window.spawnStaticVirus) {
@@ -3633,7 +4733,6 @@ function setPremium() {
             }
         });
 
-        console.log('🧱 坍缩系统就绪 — G 键重力解放（DOM 物理版）');
     })();
     </script>
 

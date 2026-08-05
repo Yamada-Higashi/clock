@@ -1457,6 +1457,15 @@
         }
         .sn-note:active { cursor: grabbing; }
 
+        /* 开关动画：与ルーティン面板同款（淡入 + 上滑 + 微缩放 0.25s） */
+        .sn-note { transition: opacity 0.25s ease, transform 0.25s ease; }
+        .sn-note.sn-enter,
+        .sn-note.sn-leave {
+            opacity: 0;
+            transform: translateY(-12px) scale(0.96);
+        }
+        .sn-note.sn-leave { pointer-events: none; }
+
         .sn-toolbar {
             position: absolute;
             left: 16px;
@@ -2538,7 +2547,8 @@
             } catch (_) {}
             if (level === 'rejected') {
                 window.__rejected = true;
-                document.querySelectorAll('.weekcal, .weather, .battery-v, .pomodoro, .countdown, .pct-mask, .sn-note, #snAddFab, #weatherMulti').forEach(el => el.style.display = 'none');
+                // ルーティン入口/面板也一并隐藏（解析期元素还不存在时此处自动跳过，DOMContentLoaded 门禁兜底）
+                document.querySelectorAll('.weekcal, .weather, .battery-v, .pomodoro, .countdown, .pct-mask, .sn-note, #snAddFab, #weatherMulti, #clFab, #clPanel').forEach(el => el.style.display = 'none');
                 document.getElementById('timeAmPm').style.display = 'none';
                 // Unix epoch 时钟：从 00:00:00 开始往上数
                 document.getElementById('dateText').textContent = '1970-01-01';
@@ -2589,8 +2599,12 @@
                 document.getElementById('countdownWidget').style.display = 'none';
                 var $fab = document.getElementById('snAddFab');
                 if ($fab) $fab.style.display = 'none';
-                document.getElementById('clFab').style.display = 'none';
-                document.getElementById('clPanel').classList.add('hidden');
+                // 主脚本在 #clFab/#clPanel 的 HTML 之前执行，解析期 getElementById 会拿到 null ——
+                // 不判空会 TypeError 中断整个脚本，连带 initChecklist/snInit 的注册全部挂掉（必要のみ 模式的老 bug）
+                var $clFab = document.getElementById('clFab');
+                if ($clFab) $clFab.style.display = 'none';
+                var $clPanel = document.getElementById('clPanel');
+                if ($clPanel) $clPanel.classList.add('hidden');
                 document.querySelectorAll('.sn-note').forEach(el => el.style.display = 'none');
                 document.getElementById('sysstat').style.display = 'none';
                 return;
@@ -4280,6 +4294,7 @@ function setPremium() {
             { bg: '#2A2035', border: '#7a4a9a' },  // 暗紫
         ];
         let snNotes = [];
+        let snEnterIndex = -1; // 新便签入场动画标记（渲染一次后复位）
         try { snNotes = JSON.parse(localStorage.getItem(SN_KEY)) || []; } catch(_) {}
         function snSave() { try { localStorage.setItem(SN_KEY, JSON.stringify(snNotes)); } catch(_) {} }
         snNotes = snNotes.map(function(n) {
@@ -4327,9 +4342,13 @@ function setPremium() {
             del.textContent = '\u00d7';
             del.addEventListener('mousedown', function(e) { e.stopPropagation(); });
             del.addEventListener('click', function() {
-                snNotes.splice(i, 1);
-                snSave();
-                snRenderAll();
+                // 离场动画：先缩淡，250ms 后再真正移除
+                div.classList.add('sn-leave');
+                setTimeout(function() {
+                    snNotes.splice(i, 1);
+                    snSave();
+                    snRenderAll();
+                }, 250);
             });
             div.appendChild(del);
 
@@ -4614,8 +4633,16 @@ function setPremium() {
             var notes = document.querySelectorAll('.sn-note');
             for (var j = 0; j < notes.length; j++) notes[j].remove();
             for (var j = 0; j < snNotes.length; j++) {
-                document.body.appendChild(snCreateEl(snNotes[j], j));
+                var el = snCreateEl(snNotes[j], j);
+                document.body.appendChild(el);
+                if (j === snEnterIndex) {
+                    // 入场动画：先挂隐藏态，强制回流后再过渡到可见
+                    el.classList.add('sn-enter');
+                    void el.offsetWidth;
+                    el.classList.remove('sn-enter');
+                }
             }
+            snEnterIndex = -1;
         }
 
         function snInit() {
@@ -4643,6 +4670,7 @@ function setPremium() {
                         y: Math.round(20 + Math.random() * (wh - 280)),
                         created: Date.now()
                     });
+                    snEnterIndex = snNotes.length - 1; // 只让新加的这张便签播入场动画
                     snSave();
                     snRenderAll();
                     var allNotes = document.querySelectorAll('.sn-note');
@@ -4887,10 +4915,24 @@ function setPremium() {
         });
     };
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', window.initChecklist);
-    } else {
+    // ルーティン只在「全部同意」下启动；reject / necessary（以及任何非 all 的已存同意）一律隐藏不初始化。
+    // 解析期 startDashboard 看不到 #clFab（它在脚本之后），所以这里才是权威门禁；
+    // 首次访问（无 consent）时不干预，保持 cookie 墙后的默认可见状态，点「同意する」后照常可用。
+    function initChecklistIfAllowed() {
+        var level = (typeof getConsentLevel === 'function') ? getConsentLevel() : null;
+        if (level && level !== 'all') {
+            var f = document.getElementById('clFab');
+            if (f) f.style.display = 'none';
+            var p = document.getElementById('clPanel');
+            if (p) p.classList.add('hidden');
+            return;
+        }
         window.initChecklist();
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initChecklistIfAllowed);
+    } else {
+        initChecklistIfAllowed();
     }
 
     </script>

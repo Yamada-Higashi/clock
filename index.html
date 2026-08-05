@@ -156,10 +156,19 @@
             margin-bottom: 0;
             cursor: pointer;
         }
+        .pomo-inner {
+            display: block;
+            width: fit-content;
+            margin: 0;
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: transform;
+        }
         .pomodoro.active {
             max-height: 140px;
             opacity: 1;
             margin-bottom: 8px;
+            max-width: 750px;
+            margin-inline: auto;
         }
         .pomo-row {
             display: flex;
@@ -203,7 +212,7 @@
             width: 200px;
             height: 8px;
             background: rgba(255,255,255,0.06);
-            margin: 6px auto 0 auto;
+            margin-top: 6px;
         }
         .pomo-bar-fill {
             height: 100%;
@@ -1582,6 +1591,233 @@
             user-select: none;
         }
 
+        /* ── Checklist (horizontal chips + resizable) ── */
+        .cl-fab {
+            position: fixed;
+            left: 36px;
+            top: 286px;
+            z-index: 44;
+            padding: 0 14px;
+            height: 38px;
+            border-radius: 0;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.35);
+            font-size: 14px;
+            line-height: 38px;
+            cursor: pointer;
+            user-select: none;
+            font-family: 'BIZ UDPGothic', 'Noto Sans SC', sans-serif;
+            letter-spacing: 3px;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+        .cl-fab:hover {
+            background: rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.7);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .cl-panel {
+            position: fixed;
+            z-index: 46;
+            left: 36px;
+            top: 80px;
+            width: 340px;
+            min-width: 160px;
+            min-height: 60px;
+            background: #0a0a0a;
+            border: 1px solid rgba(0,200,255,0.15);
+            display: flex;
+            flex-direction: column;
+            font-family: 'Noto Sans SC', 'BIZ UDPGothic', sans-serif;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            overflow: hidden;
+        }
+        .cl-panel.hidden {
+            opacity: 0;
+            transform: translateY(-12px) scale(0.96);
+            pointer-events: none;
+        }
+
+        .cl-header {
+            display: flex;
+            align-items: center;
+            padding: 3px 16px;
+            border-bottom: 1px solid rgba(0,200,255,0.2);
+            cursor: grab;
+            user-select: none;
+            flex-shrink: 0;
+        }
+        .cl-header:active { cursor: grabbing; }
+        .cl-title {
+            font-size: 15px;
+            color: rgba(255,255,255,0.7);
+            letter-spacing: 2px;
+            flex: 1;
+        }
+        .cl-count {
+            font-size: 12px;
+            color: rgba(255,255,255,0.3);
+            font-family: 'Bender', 'JetBrains Mono', monospace;
+            margin-right: 12px;
+        }
+        .cl-close {
+            font-size: 16px;
+            color: rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: color 0.15s;
+            line-height: 1;
+        }
+        .cl-close:hover { color: rgba(255,255,255,0.6); }
+
+        .cl-section {
+            padding: 6px 16px 8px;
+            flex-shrink: 0;
+        }
+        .cl-section + .cl-section {
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .cl-section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .cl-section-title {
+            font-size: 11px;
+            color: rgba(255,255,255,0.25);
+            letter-spacing: 2px;
+            font-family: 'BIZ UDPGothic', 'Noto Sans SC', sans-serif;
+            flex: 1;
+        }
+        .cl-section-count {
+            font-size: 10px;
+            color: rgba(255,255,255,0.2);
+            font-family: 'Bender', 'JetBrains Mono', monospace;
+        }
+
+        /* ── Horizontal chips ── */
+        .cl-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            min-height: 24px;
+        }
+        .cl-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 2px 8px 2px 4px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
+            cursor: default;
+            font-size: clamp(11px, 1vw, 13px);
+            line-height: 1.4;
+            white-space: nowrap;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .cl-chip:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); }
+        .cl-chip.done {
+            border-color: rgba(100,200,120,0.25);
+            background: rgba(100,200,120,0.06);
+        }
+        .cl-chip-cb {
+            width: 13px;
+            height: 13px;
+            min-width: 13px;
+            border-radius: 0;
+            border: 2px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.15s, background 0.15s;
+            box-sizing: border-box;
+            font-size: 8px;
+            line-height: 1;
+            user-select: none;
+        }
+        .cl-chip-cb:hover { border-color: rgba(255,255,255,0.4); }
+        .cl-chip-cb.done {
+            background: rgba(100,200,120,0.2);
+            border-color: rgba(100,200,120,0.5);
+        }
+        .cl-chip-cb.done::after { content: '\2713'; color: rgba(100,200,120,0.7); }
+        .cl-chip-text {
+            cursor: text;
+            outline: none;
+            border: none;
+            background: transparent;
+            color: rgba(255,255,255,0.7);
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+            padding: 0;
+            min-width: 8px;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .cl-chip-text.done {
+            text-decoration: line-through;
+            color: rgba(255,255,255,0.25);
+        }
+        .cl-chip-del {
+            font-size: 12px;
+            color: rgba(255,255,255,0.12);
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.15s, color 0.15s;
+            line-height: 1;
+            user-select: none;
+        }
+        .cl-chip:hover .cl-chip-del { opacity: 1; }
+        .cl-chip-del:hover { color: #c00; }
+
+        /* ── Inline add ── */
+        .cl-add-inline {
+            border: none;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.35);
+            font-size: clamp(11px, 1vw, 13px);
+            padding: 2px 10px;
+            outline: none;
+            width: 100px;
+            font-family: inherit;
+            line-height: 1.6;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .cl-add-inline:focus {
+            border-color: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.6);
+        }
+        .cl-add-inline::placeholder { color: rgba(255,255,255,0.15); }
+
+        /* ── Resize handle ── */
+        .cl-resize {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 14px;
+            height: 14px;
+            cursor: nwse-resize;
+            opacity: 0.3;
+            transition: opacity 0.2s ease;
+            user-select: none;
+        }
+        .cl-panel:hover .cl-resize { opacity: 0.7; }
+        .cl-resize::after {
+            content: '';
+            position: absolute;
+            right: 2px;
+            bottom: 2px;
+            width: 8px;
+            height: 8px;
+            border-right: 2px solid rgba(0,200,255,0.5);
+            border-bottom: 2px solid rgba(0,200,255,0.5);
+        }
+
     </style>
 </head>
 <body>
@@ -1602,12 +1838,14 @@
         <div class="zhetsu-info" id="zhetsuInfo"></div>
         <!-- 番茄钟 -->
         <div class="pomodoro" id="pomodoroTimer">
-            <div class="pomo-row">
-                <div class="pomo-time" id="pomoTime">25:00</div>
-                <span class="pomo-pause" id="pomoPause">⏸</span>
+            <div class="pomo-inner">
+                <div class="pomo-row">
+                    <div class="pomo-time" id="pomoTime">25:00</div>
+                    <span class="pomo-pause" id="pomoPause">⏸</span>
+                </div>
+                <div class="pomo-bar"><div class="pomo-bar-fill" id="pomoBar"></div></div>
+                <div class="pomo-label" id="pomoLabel">進行中</div>
             </div>
-            <div class="pomo-bar"><div class="pomo-bar-fill" id="pomoBar"></div></div>
-            <div class="pomo-label" id="pomoLabel">進行中</div>
         </div>
         <div class="time" id="timeDisplay">
             <span class="time-ampm" id="timeAmPm">--</span>
@@ -2118,6 +2356,9 @@
                 $desc.textContent = wDesc;
                 $desc.className = 'weather-desc';
 
+                // 地区已切换时同步刷新日出日落（fetchSunMoon 读同一份位置缓存）
+                fetchSunMoon();
+
             } catch (err) {
                 console.warn('天气获取失败:', err.message);
                 $temp.textContent = '--';
@@ -2272,7 +2513,8 @@
         // ── 日の出/日の入り/月相 ──
         async function fetchSunMoon() {
             try {
-                const resp = await fetch('https://api.open-meteo.com/v1/forecast?latitude=23.13&longitude=113.32&daily=sunrise,sunset&timezone=Asia%2FShanghai&forecast_days=1', {
+                const loc = getWeatherLocation();
+                const resp = await fetch('https://api.open-meteo.com/v1/forecast?latitude=' + loc.lat + '&longitude=' + loc.lon + '&daily=sunrise,sunset&timezone=auto&forecast_days=1', {
                     signal: AbortSignal.timeout(8000)
                 });
                 if (!resp.ok) throw new Error();
@@ -2347,6 +2589,8 @@
                 document.getElementById('countdownWidget').style.display = 'none';
                 var $fab = document.getElementById('snAddFab');
                 if ($fab) $fab.style.display = 'none';
+                document.getElementById('clFab').style.display = 'none';
+                document.getElementById('clPanel').classList.add('hidden');
                 document.querySelectorAll('.sn-note').forEach(el => el.style.display = 'none');
                 document.getElementById('sysstat').style.display = 'none';
                 return;
@@ -2354,6 +2598,7 @@
 
             // all：全部許可（広告も含む）
             snInit(); // 便签可能在 DOMContentLoaded 时因无 consent 被跳过，这里重试
+            if (typeof initChecklist === 'function') initChecklist();
             document.getElementById('batteryV').classList.add('show');
             document.getElementById('countdownWidget').style.display = '';
             document.getElementById('pomodoroTimer').style.display = '';
@@ -2423,7 +2668,7 @@
             });
             fetchSunMoon();
             fetchFX(true);
-            fxTimer = setInterval(fetchFX, 2000);
+            fxTimer = setInterval(fetchFX, 5 * 60 * 1000);
             if (isPremium()) { document.getElementById('adBanner').classList.add('ad-hidden'); } else { setTimeout(showAd, 3000); }
             initSysStat();
         }
@@ -2840,53 +3085,106 @@ function setPremium() {
             }
         });
 
-        // 单击番茄钟 → 弹出暂停按钮
+        // 番茄钟滑动定位（transform）
+        const $pomoInner = document.querySelector('.pomo-inner');
+        let pomoPos = 'center';
+        function applyPomoPos(pos) {
+            pomoPos = pos;
+            $pomo.classList.remove('pos-left', 'pos-right');
+            if (pos === 'left') $pomo.classList.add('pos-left');
+            else if (pos === 'right') $pomo.classList.add('pos-right');
+            const pw = $pomo.offsetWidth;
+            const iw = $pomoInner.offsetWidth;
+            const space = pw - iw;
+            if (pos === 'left') $pomoInner.style.transform = 'translateX(0)';
+            else if (pos === 'right') $pomoInner.style.transform = `translateX(${space}px)`;
+            else $pomoInner.style.transform = `translateX(${space / 2}px)`;
+        }
+        // 初始化居中
+        requestAnimationFrame(() => applyPomoPos('center'));
+
+        // 番茄钟单击/双击 timer（居中内容区用）
+        let pomoClickTimer = null;
+
+        // 番茄钟单击 → 左中右三区
         $pomo.addEventListener('click', (e) => {
             if (e.target === $pomoPause) return;
-            $pomoPause.classList.toggle('show');
+            const pr = $pomo.getBoundingClientRect();
+            const ratio = (e.clientX - pr.left) / pr.width;
+
+            // 左区 ~33% → 左对齐（双击不弹窗）
+            if (ratio < 0.33) {
+                if (pomoClickTimer) {
+                    clearTimeout(pomoClickTimer);
+                    pomoClickTimer = null;
+                }
+                applyPomoPos(pomoPos === 'left' ? 'center' : 'left');
+                $pomoPause.classList.remove('show');
+                return;
+            }
+            // 右区 ~33% → 右对齐（双击不弹窗）
+            if (ratio > 0.67) {
+                if (pomoClickTimer) {
+                    clearTimeout(pomoClickTimer);
+                    pomoClickTimer = null;
+                }
+                applyPomoPos(pomoPos === 'right' ? 'center' : 'right');
+                $pomoPause.classList.remove('show');
+                return;
+            }
+
+            // 中间区 → timer 区分单/双击
+            if (pomoClickTimer) {
+                clearTimeout(pomoClickTimer);
+                pomoClickTimer = null;
+                // 双击 → 调时长
+                const raw = prompt('ポモドーロ：分数を入力', '25');
+                if (raw !== null) {
+                    const mins = parseInt(raw);
+                    if (!isNaN(mins) && mins >= 0 && mins <= 999) {
+                        if (mins === 0) {
+                            beepPomodoro();
+                            $pomo.classList.add('active');
+                            formatPomoTime(0);
+                            $pomoLabel.textContent = '終了！';
+                            $pomoBar.style.width = '100%';
+                            $pomoBar.style.background = 'rgba(255, 80, 80, 0.6)';
+                            pomodoroRemaining = 0;
+                            pomodoroTotal = 0;
+                            $pomoPause.textContent = '⏸';
+                            $pomoPause.classList.remove('is-play');
+                        } else {
+                            const secs = mins * 60;
+                            pomodoroInterval = null;
+                            pomoPaused = false;
+                            pomoBeeped = false;
+                            pomodoroRemaining = secs;
+                            pomodoroTotal = secs;
+                            $pomoPause.textContent = '⏸';
+                            $pomoPause.classList.remove('is-play');
+                            $pomo.classList.add('active');
+                            formatPomoTime(secs);
+                            $pomoLabel.textContent = '進行中';
+                            $pomoBar.style.width = '100%';
+                            $pomoBar.style.background = 'rgba(0, 200, 255, 0.4)';
+                            pomodoroInterval = true;
+                        }
+                    }
+                }
+                return;
+            }
+            pomoClickTimer = setTimeout(() => {
+                pomoClickTimer = null;
+                // 单击 → 弹暂停按钮
+                $pomoPause.classList.toggle('show');
+            }, 250);
         });
+
         // 点其他地方（主时间）收起暂停按钮
         document.addEventListener('click', (e) => {
             if (!$pomo.contains(e.target)) {
                 $pomoPause.classList.remove('show');
             }
-        });
-
-        // 双击番茄钟 → 调时长
-        $pomo.addEventListener('dblclick', (e) => {
-            e.stopPropagation();
-            const raw = prompt('ポモドーロ：分数を入力', '25');
-            if (raw === null) return;
-            const mins = parseInt(raw);
-            if (isNaN(mins) || mins < 0 || mins > 999) return;
-            if (mins === 0) {
-                // 输入 0 → 立刻响
-                beepPomodoro();
-                $pomo.classList.add('active');
-                formatPomoTime(0);
-                $pomoLabel.textContent = '終了！';
-                $pomoBar.style.width = '100%';
-                $pomoBar.style.background = 'rgba(255, 80, 80, 0.6)';
-                pomodoroRemaining = 0;
-                pomodoroTotal = 0;
-                $pomoPause.textContent = '⏸';
-                $pomoPause.classList.remove('is-play');
-                return;
-            }
-            const secs = mins * 60;
-            pomodoroInterval = null;
-            pomoPaused = false;
-            pomoBeeped = false;
-            pomodoroRemaining = secs;
-            pomodoroTotal = secs;
-            $pomoPause.textContent = '⏸';
-            $pomoPause.classList.remove('is-play');
-            $pomo.classList.add('active');
-            formatPomoTime(secs);
-            $pomoLabel.textContent = '進行中';
-            $pomoBar.style.width = '100%';
-            $pomoBar.style.background = 'rgba(0, 200, 255, 0.4)';
-            pomodoroInterval = true;
         });
 
         // ── 点击处理（单击番茄钟/双击调试）──
@@ -3078,7 +3376,8 @@ function setPremium() {
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) {
                 fetchWeather();
-                if (fxTimer) fetchFX();
+                fetchFX(true);
+                if (!fxTimer) fxTimer = setInterval(fetchFX, 10 * 60 * 1000);
             } else {
                 if (fxTimer) { clearInterval(fxTimer); fxTimer = null; }
             }
@@ -4360,10 +4659,271 @@ function setPremium() {
         }
         console.log('📺 Created by DeepSeek V4 Flash'),
         console.log('🐞🔨 Bugs fixed by Claude Sonnet 5');
+
+    // ═══════════════════════════════════════════
+    // ✅ ルーティン（横チップ + リサイズ）
+    // ═══════════════════════════════════════════
+    window.initChecklist = function() {
+        const KEY = 'dash_routine';
+        const POS_KEY = 'dash_checklist_pos';
+
+        function todayStr() {
+            var d = new Date();
+            return d.getFullYear() + '-' +
+                String(d.getMonth() + 1).padStart(2, '0') + '-' +
+                String(d.getDate()).padStart(2, '0');
+        }
+        function weekStr() {
+            var d = new Date();
+            var utc = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            var dn = utc.getUTCDay() || 7;
+            utc.setUTCDate(utc.getUTCDate() + 4 - dn);
+            var ys = new Date(Date.UTC(utc.getUTCFullYear(), 0, 1));
+            var wn = Math.ceil((((utc - ys) / 86400000) + 1) / 7);
+            return utc.getUTCFullYear() + '-W' + String(wn).padStart(2, '0');
+        }
+
+        // ── 数据 ──
+        var df = { items: [{ text: '散歩30分', done: false }, { text: '水2L', done: false }, { text: '読書30分', done: false }] };
+        var wf = { items: [{ text: '部屋の掃除', done: false }, { text: '買い出し', done: false }] };
+        var data = { daily: { key: '', items: df.items }, weekly: { key: '', items: wf.items } };
+        try {
+            var raw = JSON.parse(localStorage.getItem(KEY));
+            if (raw && raw.daily && raw.weekly) data = raw;
+        } catch (e) {}
+
+        // 跨天/跨周自动重置（抽成函数：初始化跑一次 + 每分钟轮询，不用再手动刷新）
+        function checkRollover() {
+            var td = todayStr(), tw = weekStr();
+            var changed = false;
+            if (data.daily.key !== td) { data.daily.items.forEach(function(it) { it.done = false; }); data.daily.key = td; changed = true; }
+            if (data.weekly.key !== tw) { data.weekly.items.forEach(function(it) { it.done = false; }); data.weekly.key = tw; changed = true; }
+            if (changed) renderAll();
+            return changed;
+        }
+
+        function save() { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {} }
+        save();
+
+        // ── DOM ──
+        var panel = document.getElementById('clPanel');
+        var fab = document.getElementById('clFab');
+        var close = document.getElementById('clClose');
+        var header = document.getElementById('clHeader');
+        var cTotal = document.getElementById('clCount');
+        var chipsD = document.getElementById('clChipsD');
+        var chipsW = document.getElementById('clChipsW');
+        var cD = document.getElementById('clCountD');
+        var cW = document.getElementById('clCountW');
+        var inpD = document.getElementById('clAddD');
+        var inpW = document.getElementById('clAddW');
+        var resize = document.getElementById('clResize');
+        if (!panel || !fab || !chipsD || !chipsW) return;
+        if (fab._clInited) return;
+        fab._clInited = true;
+
+        // ── 位置・サイズ復元 ──
+        try {
+            var state = JSON.parse(localStorage.getItem(POS_KEY));
+            if (state) {
+                if (state.x) panel.style.left = state.x + 'px';
+                if (state.y) panel.style.top = state.y + 'px';
+                if (state.w) panel.style.width = state.w + 'px';
+                if (state.h) panel.style.height = state.h + 'px';
+            }
+        } catch (e) {}
+
+        function saveState() {
+            try {
+                localStorage.setItem(POS_KEY, JSON.stringify({
+                    x: panel.offsetLeft, y: panel.offsetTop,
+                    w: panel.offsetWidth, h: panel.offsetHeight
+                }));
+            } catch (e) {}
+        }
+
+        // ── レンダリング ──
+        function escHtml(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+        function renderChips(container, items) {
+            var html = '', done = 0;
+            items.forEach(function(it, i) {
+                if (it.done) done++;
+                html += '<span class="cl-chip' + (it.done ? ' done' : '') + '">';
+                html += '<span class="cl-chip-cb' + (it.done ? ' done' : '') + '" data-i="' + i + '"></span>';
+                html += '<span class="cl-chip-text' + (it.done ? ' done' : '') + '" contenteditable data-i="' + i + '">' + escHtml(it.text) + '</span>';
+                html += '<span class="cl-chip-del" data-i="' + i + '">×</span>';
+                html += '</span>';
+            });
+            container.innerHTML = html;
+        }
+
+        function renderAll() {
+            var dDone = 0, wDone = 0;
+            data.daily.items.forEach(function(it) { if (it.done) dDone++; });
+            data.weekly.items.forEach(function(it) { if (it.done) wDone++; });
+            renderChips(chipsD, data.daily.items);
+            renderChips(chipsW, data.weekly.items);
+            cD.textContent = dDone + '/' + data.daily.items.length;
+            cW.textContent = wDone + '/' + data.weekly.items.length;
+            cTotal.textContent = (dDone + wDone) + '/' + (data.daily.items.length + data.weekly.items.length);
+            save();
+        }
+
+        // ── イベント ──
+        function setupChips(container, itemsRef) {
+            container.addEventListener('click', function(e) {
+                var t = e.target;
+                if (t.classList.contains('cl-chip-cb')) {
+                    e.stopPropagation();
+                    var i = parseInt(t.getAttribute('data-i'));
+                    itemsRef[i].done = !itemsRef[i].done;
+                    renderAll();
+                    return;
+                }
+                if (t.classList.contains('cl-chip-del')) {
+                    e.stopPropagation();
+                    var i = parseInt(t.getAttribute('data-i'));
+                    itemsRef.splice(i, 1);
+                    renderAll();
+                    return;
+                }
+            });
+            container.addEventListener('blur', function(e) {
+                var t = e.target;
+                if (t.classList.contains('cl-chip-text')) {
+                    var i = parseInt(t.getAttribute('data-i'));
+                    var txt = t.textContent.trim();
+                    if (txt) { itemsRef[i].text = txt; renderAll(); }
+                }
+            }, true);
+            container.addEventListener('keydown', function(e) {
+                var t = e.target;
+                if (t.classList.contains('cl-chip-text') && e.key === 'Enter') {
+                    e.preventDefault();
+                    t.blur();
+                }
+            });
+        }
+
+        setupChips(chipsD, data.daily.items);
+        setupChips(chipsW, data.weekly.items);
+
+        function addItem(inp, itemsRef) {
+            var t = inp.value.trim();
+            if (!t) return;
+            itemsRef.push({ text: t, done: false });
+            renderAll();
+            inp.value = '';
+            inp.focus();
+        }
+
+        inpD.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); addItem(inpD, data.daily.items); } });
+        inpW.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); addItem(inpW, data.weekly.items); } });
+
+        fab.addEventListener('click', function() {
+            panel.classList.toggle('hidden');
+            if (!panel.classList.contains('hidden')) inpD.focus();
+        });
+        close.addEventListener('click', function() { panel.classList.add('hidden'); });
+
+        // ── ドラッグ ──
+        var hx = 0, hy = 0, hsx = 0, hsy = 0, hDrag = false;
+        header.addEventListener('mousedown', function(e) {
+            if (e.target !== header && !e.target.classList.contains('cl-title') && !e.target.classList.contains('cl-count')) return;
+            hDrag = true; hsx = e.clientX; hsy = e.clientY; hx = panel.offsetLeft; hy = panel.offsetTop;
+            panel.style.transition = 'none'; e.preventDefault();
+        });
+        document.addEventListener('mousemove', function(e) { if (!hDrag) return; panel.style.left = (hx + e.clientX - hsx) + 'px'; panel.style.top = (hy + e.clientY - hsy) + 'px'; });
+        document.addEventListener('mouseup', function() { if (!hDrag) return; hDrag = false; panel.style.transition = ''; saveState(); });
+        header.addEventListener('touchstart', function(e) {
+            if (e.target !== header && !e.target.classList.contains('cl-title') && !e.target.classList.contains('cl-count')) return;
+            var t = e.touches[0]; hDrag = true; hsx = t.clientX; hsy = t.clientY; hx = panel.offsetLeft; hy = panel.offsetTop;
+            panel.style.transition = 'none';
+        }, { passive: true });
+        document.addEventListener('touchmove', function(e) { if (!hDrag) return; var t = e.touches[0]; panel.style.left = (hx + t.clientX - hsx) + 'px'; panel.style.top = (hy + t.clientY - hsy) + 'px'; }, { passive: true });
+        document.addEventListener('touchend', function() { if (!hDrag) return; hDrag = false; panel.style.transition = ''; saveState(); });
+
+        // ── リサイズ ──
+        var rs = false, rsX, rsY, rW, rH;
+        function resizeStart(e) {
+            if (!e.target.closest('#clResize')) return;
+            var ev = e.touches ? e.touches[0] : e;
+            rs = true; rsX = ev.clientX; rsY = ev.clientY;
+            rW = panel.offsetWidth; rH = panel.offsetHeight;
+            panel.style.transition = 'none';
+            panel.style.zIndex = 50;
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        function resizeMove(e) {
+            if (!rs) return;
+            var ev = e.touches ? e.touches[0] : e;
+            panel.style.width = Math.max(160, rW + (ev.clientX - rsX)) + 'px';
+            panel.style.height = Math.max(60, rH + (ev.clientY - rsY)) + 'px';
+        }
+        function resizeEnd() {
+            if (!rs) return;
+            rs = false;
+            panel.style.transition = '';
+            panel.style.zIndex = 46;
+            saveState();
+        }
+        resize.addEventListener('mousedown', resizeStart);
+        document.addEventListener('mousemove', resizeMove);
+        document.addEventListener('mouseup', resizeEnd);
+        resize.addEventListener('touchstart', resizeStart, { passive: false });
+        document.addEventListener('touchmove', resizeMove, { passive: false });
+        document.addEventListener('touchend', resizeEnd);
+
+        // Init
+        renderAll();
+        checkRollover(); // 初始化时先查一次跨天/跨周
+        setInterval(checkRollover, 60 * 1000); // 每分钟轮询：跨过午夜/周一自动重置勾选
+
+        // Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !panel.classList.contains('hidden')) panel.classList.add('hidden');
+        });
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', window.initChecklist);
+    } else {
+        window.initChecklist();
+    }
+
     </script>
 
     <!-- Sticky Notes (UWP 风格) -->
     <span class="sn-add-fab" id="snAddFab">＋ 付箋</span>
+
+    <!-- ✅ ルーティン（横チップ + リサイズ） -->
+    <span class="cl-fab" id="clFab">＋ ルーティン</span>
+    <div class="cl-panel" id="clPanel">
+        <div class="cl-header" id="clHeader">
+            <span class="cl-title">ルーティン</span>
+            <span class="cl-count" id="clCount">0/0</span>
+            <span class="cl-close" id="clClose">×</span>
+        </div>
+        <div class="cl-section">
+            <div class="cl-section-header">
+                <span class="cl-section-title">日次</span>
+                <span class="cl-section-count" id="clCountD">0/0</span>
+            </div>
+            <div class="cl-chips" id="clChipsD"></div>
+            <input class="cl-add-inline" id="clAddD" placeholder="+ 追加" spellcheck="false">
+        </div>
+        <div class="cl-section">
+            <div class="cl-section-header">
+                <span class="cl-section-title">週次</span>
+                <span class="cl-section-count" id="clCountW">0/0</span>
+            </div>
+            <div class="cl-chips" id="clChipsW"></div>
+            <input class="cl-add-inline" id="clAddW" placeholder="+ 追加" spellcheck="false">
+        </div>
+        <span class="cl-resize" id="clResize"></span>
+    </div>
 
     <!-- 🧱 坍缩系统 -->
     <div id="collapseHint">G — 重力解放 / R — 修復</div>
@@ -4396,6 +4956,8 @@ function setPremium() {
             { sel: '#snAddFab', mass: 0.3 },
             { sel: '#weatherMulti', mass: 0.4 },
             { sel: '#zhetsuInfo', mass: 0.2 },
+            { sel: '#clPanel', mass: 0.5 },
+            { sel: '#clFab', mass: 0.3 },
         ];
 
         function saveStyles(el) {
@@ -4512,6 +5074,14 @@ function setPremium() {
 
             collapsed = true;
             hint.classList.add('show');
+            // 坍缩时暂存并清除番茄钟对齐偏移
+            (function() {
+                const pi = document.querySelector('.pomo-inner');
+                if (pi) {
+                    pi._pomoSavedTransform = pi.style.transform || '';
+                    pi.style.transform = 'translateX(0)';
+                }
+            })();
 
             document.querySelectorAll('.hud-frame, .hud-line').forEach(el => el.style.display = 'none');
 
@@ -4694,6 +5264,15 @@ function setPremium() {
                     Matter.Mouse.clearSourceEvents(chunk._mouse);
                 }
             }
+
+            // 恢复番茄钟对齐偏移
+            (function() {
+                const pi = document.querySelector('.pomo-inner');
+                if (pi && pi._pomoSavedTransform !== undefined) {
+                    pi.style.transform = pi._pomoSavedTransform;
+                    delete pi._pomoSavedTransform;
+                }
+            })();
 
             if (gyroListener) {
                 window.removeEventListener('deviceorientation', gyroListener);
